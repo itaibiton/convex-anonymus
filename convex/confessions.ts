@@ -16,7 +16,7 @@ export const getConfessions = query({
   handler: async (ctx) => {
     const confessions = await ctx.db
       .query("confessions")
-      .withIndex("by_creation_time")
+      .withIndex("by_created_at")
       .order("desc")
       .collect();
     return confessions;

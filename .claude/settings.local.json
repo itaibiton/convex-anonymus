@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx:*)",
-      "Bash(claude mcp)"
+      "Bash(claude mcp)",
+      "mcp__convex__status",
+      "mcp__convex__functionSpec"
     ],
     "deny": []
   }

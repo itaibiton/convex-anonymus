@@ -13,5 +13,5 @@ export default defineSchema({
   confessions: defineTable({
     content: v.string(),
     createdAt: v.number(),
-  }).index("by_creation_time", ["createdAt"]),
+  }).index("by_created_at", ["createdAt"]),
 });
