@@ -13,12 +13,19 @@ export const addConfession = mutation({
 });
 
 export const getConfessions = query({
-  handler: async (ctx) => {
+  args: { 
+    paginationOpts: v.object({
+      cursor: v.union(v.string(), v.null()),
+      numItems: v.number(),
+      id: v.optional(v.number()),
+    })
+  },
+  handler: async (ctx, args) => {
     const confessions = await ctx.db
       .query("confessions")
       .withIndex("by_created_at")
       .order("desc")
-      .collect();
+      .paginate(args.paginationOpts);
     return confessions;
   },
 });

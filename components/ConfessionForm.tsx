@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
@@ -32,20 +31,19 @@ export default function ConfessionForm() {
 
   return (
     <motion.div
-      className="w-full max-w-2xl mx-auto"
+      className="w-full border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="glass-surface shadow-2xl">
-        <CardContent className="p-6">
+      <div className="p-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
               <Textarea
                 value={confession}
                 onChange={(e) => setConfession(e.target.value)}
                 placeholder="Share your anonymous confession..."
-                className="h-32 glass-surface border-[hsl(var(--color-border))] placeholder:text-[hsl(var(--color-muted-foreground))] resize-none focus:ring-2 focus:ring-[hsl(var(--color-ring))] focus:border-transparent transition-all duration-200"
+                className="h-24 border-[hsl(var(--color-border))] placeholder:text-[hsl(var(--color-muted-foreground))] resize-none focus:ring-2 focus:ring-[hsl(var(--color-ring))] focus:border-transparent transition-all duration-200 bg-background"
                 maxLength={280}
                 disabled={isSubmitting}
               />
@@ -77,8 +75,7 @@ export default function ConfessionForm() {
               </Button>
             </div>
           </form>
-        </CardContent>
-      </Card>
+      </div>
     </motion.div>
   );
 }
