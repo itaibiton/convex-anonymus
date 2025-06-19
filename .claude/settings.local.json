@@ -4,7 +4,13 @@
       "Bash(npx:*)",
       "Bash(claude mcp)",
       "mcp__convex__status",
-      "mcp__convex__functionSpec"
+      "mcp__convex__functionSpec",
+      "Bash(npm install:*)",
+      "Bash(rm:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

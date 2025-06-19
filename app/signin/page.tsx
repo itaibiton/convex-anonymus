@@ -1,71 +1,89 @@
 "use client";
 
-import { useAuthActions } from "@convex-dev/auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function SignIn() {
-  const { signIn } = useAuthActions();
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [error] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Placeholder for authentication - for now just redirect to home
+    window.location.href = "/";
+  };
+
   return (
-    <div className="flex flex-col gap-8 w-96 mx-auto h-screen justify-center items-center">
-      <p>Log in to see the numbers</p>
-      <form
-        className="flex flex-col gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          formData.set("flow", flow);
-          void signIn("password", formData)
-            .catch((error) => {
-              setError(error.message);
-            })
-            .then(() => {
-              router.push("/");
-            });
-        }}
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <motion.div 
+        className="w-full max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <input
-          className="bg-background text-foreground rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
-          type="email"
-          name="email"
-          placeholder="Email"
-        />
-        <input
-          className="bg-background text-foreground rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-        <button
-          className="bg-foreground text-background rounded-md"
-          type="submit"
-        >
-          {flow === "signIn" ? "Sign in" : "Sign up"}
-        </button>
-        <div className="flex flex-row gap-2">
-          <span>
-            {flow === "signIn"
-              ? "Don't have an account?"
-              : "Already have an account?"}
-          </span>
-          <span
-            className="text-foreground underline hover:no-underline cursor-pointer"
-            onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
-          >
-            {flow === "signIn" ? "Sign up instead" : "Sign in instead"}
-          </span>
-        </div>
-        {error && (
-          <div className="bg-red-500/20 border-2 border-red-500/50 rounded-md p-2">
-            <p className="text-foreground font-mono text-xs">
-              Error signing in: {error}
+        <Card className="glass-surface shadow-2xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold gradient-text">
+              Confession Wall
+            </CardTitle>
+            <p className="text-center text-muted-foreground">
+              {flow === "signIn" ? "Welcome back" : "Create your account"}
             </p>
-          </div>
-        )}
-      </form>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  className="w-full p-3 glass-surface rounded-xl border-[hsl(var(--color-border))] placeholder:text-[hsl(var(--color-muted-foreground))] text-theme focus:outline-none focus:ring-2 focus:ring-[hsl(var(--color-ring))] focus:border-transparent transition-all duration-200"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  className="w-full p-3 glass-surface rounded-xl border-[hsl(var(--color-border))] placeholder:text-[hsl(var(--color-muted-foreground))] text-theme focus:outline-none focus:ring-2 focus:ring-[hsl(var(--color-ring))] focus:border-transparent transition-all duration-200"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                variant="gradient"
+                className="w-full rounded-xl"
+                size="lg"
+              >
+                {flow === "signIn" ? "Sign in" : "Sign up"}
+              </Button>
+              <div className="text-center">
+                <span className="text-muted-foreground">
+                  {flow === "signIn"
+                    ? "Don't have an account?"
+                    : "Already have an account?"}
+                </span>{" "}
+                <span
+                  className="text-[hsl(var(--color-primary))] underline hover:no-underline cursor-pointer"
+                  onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
+                >
+                  {flow === "signIn" ? "Sign up" : "Sign in"}
+                </span>
+              </div>
+              {error && (
+                <div className="bg-[hsl(var(--color-destructive))]/20 border border-[hsl(var(--color-destructive))]/50 rounded-xl p-3">
+                  <p className="text-destructive text-sm">
+                    Error signing in: {error}
+                  </p>
+                </div>
+              )}
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
