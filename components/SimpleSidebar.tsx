@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -35,9 +37,16 @@ interface SimpleSidebarProps {
 
 export default function SimpleSidebar({ children }: SimpleSidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
+  const { signOut } = useAuthActions();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -46,6 +55,15 @@ export default function SimpleSidebar({ children }: SimpleSidebarProps) {
   const handleNavigation = (href: string) => {
     router.push(href);
     setMobileOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push("/");
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
   };
 
   const sidebarContent = (
@@ -71,24 +89,50 @@ export default function SimpleSidebar({ children }: SimpleSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <button
-              key={item.name}
-              onClick={() => handleNavigation(item.href)}
-              className={cn(
-                "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
-              )}
-            >
-              <item.icon className="h-5 w-5 shrink-0" />
-              <span className="text-sm font-medium">{item.name}</span>
-            </button>
-          );
-        })}
+        {!mounted || authLoading ? (
+          // Show skeleton while auth is loading
+          <div className="space-y-1">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="w-full h-10 bg-muted/50 rounded-lg animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <>
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              const isProtected = item.href !== "/";
+              const shouldShow = !isProtected || isAuthenticated;
+              
+              if (!shouldShow) return null;
+              
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavigation(item.href)}
+                  className={cn(
+                    "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                  )}
+                >
+                  <item.icon className="h-5 w-5 shrink-0" />
+                  <span className="text-sm font-medium">{item.name}</span>
+                </button>
+              );
+            })}
+            
+            {!isAuthenticated && (
+              <button
+                onClick={() => handleNavigation("/signin")}
+                className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+              >
+                <User className="h-5 w-5 shrink-0" />
+                <span className="text-sm font-medium">Sign In</span>
+              </button>
+            )}
+          </>
+        )}
       </nav>
 
       {/* Footer */}
@@ -97,23 +141,27 @@ export default function SimpleSidebar({ children }: SimpleSidebarProps) {
           onClick={toggleTheme}
           className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground text-muted-foreground transition-colors"
         >
-          {theme === "dark" ? (
+          {!mounted ? (
+            <Sun className="h-5 w-5 shrink-0" />
+          ) : theme === "dark" ? (
             <Sun className="h-5 w-5 shrink-0" />
           ) : (
             <Moon className="h-5 w-5 shrink-0" />
           )}
           <span className="text-sm font-medium">
-            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            {!mounted ? "Theme" : theme === "dark" ? "Light Mode" : "Dark Mode"}
           </span>
         </button>
 
-        <button
-          onClick={() => console.log("Sign out")}
-          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-destructive hover:text-destructive-foreground text-muted-foreground transition-colors"
-        >
-          <LogOut className="h-5 w-5 shrink-0" />
-          <span className="text-sm font-medium">Sign Out</span>
-        </button>
+        {mounted && !authLoading && isAuthenticated && (
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-destructive hover:text-destructive-foreground text-muted-foreground transition-colors"
+          >
+            <LogOut className="h-5 w-5 shrink-0" />
+            <span className="text-sm font-medium">Sign Out</span>
+          </button>
+        )}
       </div>
     </div>
   );

@@ -16,7 +16,6 @@ import type {
 import type * as auth from "../auth.js";
 import type * as confessions from "../confessions.js";
 import type * as http from "../http.js";
-import type * as myFunctions from "../myFunctions.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -30,7 +29,6 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   confessions: typeof confessions;
   http: typeof http;
-  myFunctions: typeof myFunctions;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -1,19 +1,25 @@
 "use client";
 
-import { usePaginatedQuery } from "convex/react";
+import { usePaginatedQuery, useConvexAuth } from "convex/react";
 import { api } from "../convex/_generated/api";
 import ConfessionCard from "./ConfessionCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ConfessionList() {
+  const { isLoading: authLoading } = useConvexAuth();
+  const [mounted, setMounted] = useState(false);
   const { results: confessions, status, loadMore } = usePaginatedQuery(
     api.confessions.getConfessions,
     { paginationOpts: { cursor: null, numItems: 10 } },
     { initialNumItems: 10 }
   );
   const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,7 +38,10 @@ export default function ConfessionList() {
     return () => observer.disconnect();
   }, [status, loadMore]);
 
-  if (confessions === undefined) {
+  // Show loading skeleton while auth is loading, component is mounting, confessions are undefined, or query is loading
+  const isLoading = !mounted || authLoading || confessions === undefined || status === "LoadingFirstPage";
+  
+  if (isLoading) {
     return (
       <div className="w-full">
         {[...Array(3)].map((_, i) => (
@@ -105,8 +114,14 @@ export default function ConfessionList() {
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
             <ConfessionCard
+              _id={confession._id}
               content={confession.content}
               createdAt={confession.createdAt}
+              likesCount={confession.likesCount}
+              commentsCount={confession.commentsCount}
+              repostsCount={confession.repostsCount}
+              isLiked={confession.isLiked}
+              isReposted={confession.isReposted}
             />
           </motion.div>
         ))}

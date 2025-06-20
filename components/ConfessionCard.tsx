@@ -1,13 +1,46 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useConvexAuth, useMutation } from "convex/react";
+import { Button } from "@/components/ui/button";
+import { Heart, MessageCircle, Repeat2 } from "lucide-react";
+import Link from "next/link";
+import { api } from "../convex/_generated/api";
+import { Id } from "../convex/_generated/dataModel";
 
 interface ConfessionCardProps {
+  _id: Id<"confessions">;
   content: string;
   createdAt: number;
+  likesCount: number;
+  commentsCount: number;
+  repostsCount: number;
+  isLiked: boolean;
+  isReposted: boolean;
 }
 
-export default function ConfessionCard({ content, createdAt }: ConfessionCardProps) {
+export default function ConfessionCard({ _id, content, createdAt, likesCount, commentsCount, repostsCount, isLiked, isReposted }: ConfessionCardProps) {
+  const { isAuthenticated } = useConvexAuth();
+  const toggleLike = useMutation(api.confessions.toggleLike);
+  const toggleRepost = useMutation(api.confessions.toggleRepost);
+
+  const handleLike = async () => {
+    if (!isAuthenticated) return;
+    try {
+      await toggleLike({ confessionId: _id });
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
+
+  const handleRepost = async () => {
+    if (!isAuthenticated) return;
+    try {
+      await toggleRepost({ confessionId: _id });
+    } catch (error) {
+      console.error("Error toggling repost:", error);
+    }
+  };
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -43,14 +76,79 @@ export default function ConfessionCard({ content, createdAt }: ConfessionCardPro
         </p>
 
         <div className="flex items-center justify-between w-full pt-2">
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <div className="w-2 h-2 bg-[hsl(var(--color-muted-foreground))] rounded-full" />
+          <div className="flex items-center text-xs text-muted-foreground">
+            <div className="w-2 h-2 bg-muted-foreground rounded-full mr-2" />
             <span>Anonymous</span>
           </div>
 
           <time className="text-xs text-muted-foreground">
             {formatDate(createdAt)}
           </time>
+        </div>
+
+        <div className="flex items-center justify-between w-full pt-4 border-t border-border/50">
+          <div className="flex items-center space-x-1">
+            {isAuthenticated ? (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`h-8 px-2 transition-colors ${isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'}`}
+                onClick={handleLike}
+              >
+                <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
+                <span className="text-xs">{likesCount}</span>
+              </Button>
+            ) : (
+              <div className="group relative">
+                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                  <Heart className="w-4 h-4 mr-1" />
+                  <span className="text-xs">{likesCount}</span>
+                </Button>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <Link href="/signin" className="hover:underline">Sign in to like</Link>
+                </div>
+              </div>
+            )}
+
+            {isAuthenticated ? (
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-primary">
+                <MessageCircle className="w-4 h-4 mr-1" />
+                <span className="text-xs">{commentsCount}</span>
+              </Button>
+            ) : (
+              <div className="group relative">
+                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  <span className="text-xs">{commentsCount}</span>
+                </Button>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <Link href="/signin" className="hover:underline">Sign in to comment</Link>
+                </div>
+              </div>
+            )}
+
+            {isAuthenticated ? (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={`h-8 px-2 transition-colors ${isReposted ? 'text-green-500 hover:text-green-600' : 'text-muted-foreground hover:text-green-500'}`}
+                onClick={handleRepost}
+              >
+                <Repeat2 className="w-4 h-4 mr-1" />
+                <span className="text-xs">{repostsCount}</span>
+              </Button>
+            ) : (
+              <div className="group relative">
+                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                  <Repeat2 className="w-4 h-4 mr-1" />
+                  <span className="text-xs">{repostsCount}</span>
+                </Button>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <Link href="/signin" className="hover:underline">Sign in to repost</Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
