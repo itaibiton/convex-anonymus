@@ -1,11 +1,11 @@
 "use client";
 
-import SimpleSidebar from "@/components/SimpleSidebar";
+import AppLayout from "@/components/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function RepostsPage() {
   return (
-    <SimpleSidebar>
+    <AppLayout title="My Reposts">
       <div>
         <div className="max-w-4xl mx-auto">
           <div className="text-center space-y-4 mb-8">
@@ -34,6 +34,6 @@ export default function RepostsPage() {
           </Card>
         </div>
       </div>
-    </SimpleSidebar>
+    </AppLayout>
   );
 }

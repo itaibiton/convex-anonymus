@@ -1,12 +1,12 @@
 "use client";
 
-import SimpleSidebar from "@/components/SimpleSidebar";
+import AppLayout from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
   return (
-    <SimpleSidebar>
+    <AppLayout title="Profile">
       <div>
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4 mb-8">
@@ -82,6 +82,6 @@ export default function ProfilePage() {
           </Card>
         </div>
       </div>
-    </SimpleSidebar>
+    </AppLayout>
   );
 }

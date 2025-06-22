@@ -1,13 +1,13 @@
 "use client";
 
-import SimpleSidebar from "@/components/SimpleSidebar";
+import AppLayout from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 
 export default function SettingsPage() {
   return (
-    <SimpleSidebar>
+    <AppLayout title="Settings">
       <div>
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center space-y-4 mb-8">
@@ -111,6 +111,6 @@ export default function SettingsPage() {
           </Card>
         </div>
       </div>
-    </SimpleSidebar>
+    </AppLayout>
   );
 }

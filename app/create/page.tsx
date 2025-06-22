@@ -1,11 +1,11 @@
 "use client";
 
-import SimpleSidebar from "@/components/SimpleSidebar";
+import AppLayout from "@/components/AppLayout";
 import ConfessionForm from "@/components/ConfessionForm";
 
 export default function CreatePage() {
   return (
-    <SimpleSidebar>
+    <AppLayout title="Create Confession">
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
@@ -18,6 +18,6 @@ export default function CreatePage() {
         
         <ConfessionForm />
       </div>
-    </SimpleSidebar>
+    </AppLayout>
   );
 }

@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { useConvexAuth, useMutation } from "convex/react";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Repeat2 } from "lucide-react";
-import Link from "next/link";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 
@@ -99,15 +98,10 @@ export default function ConfessionCard({ _id, content, createdAt, likesCount, co
                 <span className="text-xs">{likesCount}</span>
               </Button>
             ) : (
-              <div className="group relative">
-                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                  <Heart className="w-4 h-4 mr-1" />
-                  <span className="text-xs">{likesCount}</span>
-                </Button>
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  <Link href="/signin" className="hover:underline">Sign in to like</Link>
-                </div>
-              </div>
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                <Heart className="w-4 h-4 mr-1" />
+                <span className="text-xs">{likesCount}</span>
+              </Button>
             )}
 
             {isAuthenticated ? (
@@ -116,15 +110,10 @@ export default function ConfessionCard({ _id, content, createdAt, likesCount, co
                 <span className="text-xs">{commentsCount}</span>
               </Button>
             ) : (
-              <div className="group relative">
-                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                  <MessageCircle className="w-4 h-4 mr-1" />
-                  <span className="text-xs">{commentsCount}</span>
-                </Button>
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  <Link href="/signin" className="hover:underline">Sign in to comment</Link>
-                </div>
-              </div>
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                <MessageCircle className="w-4 h-4 mr-1" />
+                <span className="text-xs">{commentsCount}</span>
+              </Button>
             )}
 
             {isAuthenticated ? (
@@ -138,15 +127,10 @@ export default function ConfessionCard({ _id, content, createdAt, likesCount, co
                 <span className="text-xs">{repostsCount}</span>
               </Button>
             ) : (
-              <div className="group relative">
-                <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                  <Repeat2 className="w-4 h-4 mr-1" />
-                  <span className="text-xs">{repostsCount}</span>
-                </Button>
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  <Link href="/signin" className="hover:underline">Sign in to repost</Link>
-                </div>
-              </div>
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
+                <Repeat2 className="w-4 h-4 mr-1" />
+                <span className="text-xs">{repostsCount}</span>
+              </Button>
             )}
           </div>
         </div>

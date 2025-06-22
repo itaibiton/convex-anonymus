@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   --background: oklch(1.0000 0 0);
@@ -178,3 +181,21 @@
   -webkit-background-clip: text;
   color: transparent;
 }
+
+/* Sidebar custom width utilities for TailwindCSS v4 compatibility */
+@layer utilities {
+  .w-\\[--sidebar-width\\] {
+    width: var(--sidebar-width);
+  }
+  .w-\\[--sidebar-width-icon\\] {
+    width: var(--sidebar-width-icon);
+  }
+  /* Alternative notation support */
+  .w-\\(--sidebar-width\\) {
+    width: var(--sidebar-width);
+  }
+  .w-\\(--sidebar-width-icon\\) {
+    width: var(--sidebar-width-icon);
+  }
+}
+
