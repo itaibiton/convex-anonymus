@@ -23,7 +23,7 @@ export default function AppLayout({ children, title = "Confession Wall" }: AppLa
             <span className="font-semibold">{title}</span>
           </div>
         </header>
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-1 flex-col">
           {children}
         </div>
       </SidebarInset>
