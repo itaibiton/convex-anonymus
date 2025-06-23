@@ -1,5 +1,6 @@
 "use client"
 
+import { FaUserSecret } from "react-icons/fa";
 import * as React from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -17,6 +18,8 @@ import {
   Moon,
   LogOut,
   LogIn,
+  AnnoyedIcon,
+  HardHatIcon,
 } from "lucide-react"
 
 import {
@@ -85,12 +88,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" onClick={() => handleNavigation("/")}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <MessageCircle className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">Confession Wall</span>
-                <span className="truncate text-xs">Anonymous sharing</span>
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg ">
+                <FaUserSecret className="size-12" />
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -116,15 +115,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     const isActive = pathname === item.href
                     const isProtected = item.href !== "/"
                     const shouldShow = !isProtected || isAuthenticated
-                    
+
                     if (!shouldShow) return null
-                    
+
                     return (
                       <SidebarMenuItem key={item.name}>
                         <SidebarMenuButton
                           tooltip={item.name}
                           isActive={isActive}
                           onClick={() => handleNavigation(item.href)}
+                          className="!h-auto !p-4 !text-base [&>svg]:!size-6 [&>span]:!text-base [&>span]:!font-medium"
                         >
                           <item.icon />
                           <span>{item.name}</span>
@@ -132,12 +132,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </SidebarMenuItem>
                     )
                   })}
-                  
+
                   {!isAuthenticated && (
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         tooltip="Sign In"
                         onClick={() => handleNavigation("/signin")}
+                        className="!h-auto !p-4 !text-base [&>svg]:!size-6 [&>span]:!text-base [&>span]:!font-medium"
                       >
                         <LogIn />
                         <span>Sign In</span>
@@ -157,6 +158,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               tooltip={!mounted ? "Theme" : theme === "dark" ? "Light Mode" : "Dark Mode"}
               onClick={toggleTheme}
+              className="!h-auto !p-4 !text-base [&>svg]:!size-6 [&>span]:!text-base [&>span]:!font-medium"
             >
               {!mounted ? (
                 <Sun />
@@ -170,7 +172,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          
+
           {mounted && !authLoading && isAuthenticated && (
             <SidebarMenuItem>
               <DropdownMenu>
@@ -182,9 +184,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-muted">
                       <User className="size-4" />
                     </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium">Anonymous User</span>
-                      <span className="truncate text-xs">Authenticated</span>
+                    <div className="grid flex-1 text-left text-base leading-tight">
+                      <span className="truncate font-semibold text-base">Anonymous User</span>
+                      <span className="truncate text-sm">Authenticated</span>
                     </div>
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>

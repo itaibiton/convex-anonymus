@@ -28,7 +28,8 @@
   --chart-3: oklch(0.8214 0.1600 82.5337);
   --chart-4: oklch(0.7064 0.1822 151.7125);
   --chart-5: oklch(0.5919 0.2186 10.5826);
-  --sidebar: oklch(0.9784 0.0011 197.1387);
+  /* --sidebar: oklch(0.9784 0.0011 197.1387); */
+  --sidebar: oklch(1.0000 0 0);
   --sidebar-foreground: oklch(0.1884 0.0128 248.5103);
   --sidebar-primary: oklch(0.6723 0.1606 244.9955);
   --sidebar-primary-foreground: oklch(1.0000 0 0);
@@ -39,10 +40,10 @@
   --font-sans: Open Sans, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
-  /* --radius: 1.3rem; */
+  --radius: 1.3rem;
   /* --radius: 0.5rem; */
   /* --radius: 0.25rem; */
-  --radius: 0rem;
+  /* --radius: 0rem; */
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
@@ -78,7 +79,8 @@
   --chart-3: oklch(0.8214 0.1600 82.5337);
   --chart-4: oklch(0.7064 0.1822 151.7125);
   --chart-5: oklch(0.5919 0.2186 10.5826);
-  --sidebar: oklch(0.2097 0.0080 274.5332);
+  /* --sidebar: oklch(0.2097 0.0080 274.5332); */
+  --sidebar: oklch(0 0 0);
   --sidebar-foreground: oklch(0.8853 0 0);
   --sidebar-primary: oklch(0.6818 0.1584 243.3540);
   --sidebar-primary-foreground: oklch(1.0000 0 0);
@@ -160,6 +162,37 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Improved text sizing defaults */
+  h1 { @apply text-3xl font-bold; }
+  h2 { @apply text-2xl font-semibold; }
+  h3 { @apply text-xl font-medium; }
+  p { @apply text-base leading-relaxed; }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Better scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -200,5 +233,77 @@
   .w-\\(--sidebar-width-icon\\) {
     width: var(--sidebar-width-icon);
   }
+}
+
+/* Override sidebar fixed positioning to work with container */
+.container [data-slot="sidebar-container"] {
+  position: absolute !important;
+  left: 0 !important;
+}
+
+/* Twitter-style theme overrides using shadcn tokens */
+body {
+  background-color: hsl(var(--background));
+}
+
+/* Twitter-specific design tokens */
+:root {
+  --twitter-hover: oklch(0.95 0.005 240);
+  --twitter-accent: oklch(0.29 0.084 248.53);
+  --twitter-accent-hover: oklch(0.27 0.084 248.53);
+}
+
+.dark {
+  --twitter-hover: oklch(0.05 0.005 240);
+  --twitter-accent: oklch(0.19 0.033 242.55);
+  --twitter-accent-hover: oklch(0.21 0.033 242.55);
+}
+
+/* Twitter component styles */
+.twitter-hover {
+  @apply hover:bg-accent/10 transition-colors;
+}
+
+.twitter-border {
+  @apply border-border;
+}
+
+.twitter-muted {
+  @apply text-muted-foreground;
+}
+
+/* Enhanced typography and spacing */
+.enhanced-text {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.7;
+}
+
+/* Better button and interactive element sizing */
+button, .clickable {
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+/* Improved form elements */
+input, textarea {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Enhanced card content */
+.card-content {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Widget text improvements */
+.widget-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.widget-title {
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 

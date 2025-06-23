@@ -15,7 +15,11 @@
       "Bash(pkill:*)",
       "Bash(true)",
       "WebFetch(domain:docs.convex.dev)",
-      "WebFetch(domain:ui.shadcn.com)"
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:reactbits.dev)",
+      "Bash(jsrepo:*)",
+      "Bash(ctrl_c)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }

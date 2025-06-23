@@ -4,6 +4,8 @@ import { usePaginatedQuery, useConvexAuth } from "convex/react";
 import { api } from "../convex/_generated/api";
 import ConfessionCard from "./ConfessionCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingDots } from "@/components/ui/loading-dots";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
@@ -87,9 +89,23 @@ export default function ConfessionList() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </motion.div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">
-            No confessions yet
-          </h3>
+          <TypewriterEffect
+            words={[
+              {
+                text: "No",
+                className: "text-muted-foreground",
+              },
+              {
+                text: "confessions",
+                className: "text-primary",
+              },
+              {
+                text: "yet",
+                className: "text-muted-foreground",
+              },
+            ]}
+            className="text-xl font-semibold mb-2"
+          />
           <p className="text-muted-foreground">
             Be the first to share an anonymous confession!
           </p>
@@ -129,10 +145,15 @@ export default function ConfessionList() {
         {/* Infinite scroll trigger */}
         <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
           {status === "LoadingMore" && (
-            <div className="flex items-center space-x-2 text-muted-foreground">
-              <div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin"></div>
-              <span className="text-sm">Loading more...</span>
-            </div>
+            <motion.div
+              className="flex items-center space-x-3 text-muted-foreground"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <LoadingDots size="sm" />
+              <span className="text-sm">Loading more confessions...</span>
+            </motion.div>
           )}
         </div>
       </div>

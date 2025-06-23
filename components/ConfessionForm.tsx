@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useMutation, useConvexAuth } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
+import { Image, Smile, Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ConfessionForm() {
   const [confession, setConfession] = useState("");
@@ -29,101 +28,103 @@ export default function ConfessionForm() {
     }
   };
 
-  const remainingChars = 280 - confession.length;
 
   // Show loading skeleton while auth is loading
   if (authLoading) {
     return (
-      <motion.div
-        className="w-full border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="p-4">
-          <div className="space-y-4">
-            <div className="h-24 bg-muted/50 rounded-md animate-pulse" />
+      <div className="twitter-border border-b p-4">
+        <div className="flex space-x-4">
+          <div className="w-12 h-12 rounded-full bg-muted animate-pulse"></div>
+          <div className="flex-1">
+            <div className="h-20 bg-muted rounded animate-pulse mb-4"></div>
             <div className="flex justify-between items-center">
-              <div className="h-4 w-16 bg-muted/50 rounded animate-pulse" />
-              <div className="h-10 w-32 bg-muted/50 rounded-xl animate-pulse" />
+              <div className="h-4 w-20 bg-muted rounded animate-pulse"></div>
+              <div className="h-8 w-20 bg-muted rounded-full animate-pulse"></div>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <motion.div
-        className="w-full border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="p-4">
-          <div className="space-y-4 text-center">
-            <div className="text-muted-foreground">
-              Want to share your confession?
+      <div className="twitter-border border-b p-4">
+        <div className="flex space-x-4">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
+            <span className="text-primary-foreground font-semibold text-base">?</span>
+          </div>
+          <div className="flex-1 flex items-center justify-center py-8">
+            <div className="text-center">
+              <p className="twitter-muted text-lg mb-4">Want to share your confession?</p>
+              <Link href="/signin">
+                <Button size="lg" className="rounded-full">
+                  Sign In to Post
+                </Button>
+              </Link>
             </div>
-            <Link href="/signin">
-              <Button variant="gradient" size="lg" className="rounded-xl backdrop-blur-sm">
-                Sign In to Post
-              </Button>
-            </Link>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
-      className="w-full border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="p-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <Textarea
-                value={confession}
-                onChange={(e) => setConfession(e.target.value)}
-                placeholder="Share your anonymous confession..."
-                className="h-24 border-border placeholder:text-muted-foreground resize-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all duration-200 bg-background"
-                maxLength={280}
-                disabled={isSubmitting}
-              />
-              <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
-                {remainingChars} characters left
-              </div>
+    <div className="twitter-border border-b p-4">
+      <div className="flex space-x-4">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center flex-shrink-0">
+          <span className="text-primary-foreground font-semibold text-base">A</span>
+        </div>
+        <div className="flex-1">
+          <textarea
+            value={confession}
+            onChange={(e) => setConfession(e.target.value)}
+            placeholder="What's on your mind?"
+            className="w-full bg-transparent text-2xl placeholder:text-muted-foreground resize-none border-none outline-none min-h-[80px] text-foreground leading-relaxed"
+            maxLength={280}
+            disabled={isSubmitting}
+          />
+          
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex space-x-4 text-primary">
+              <button className="hover:bg-primary/10 p-2 rounded-full transition-colors">
+                <Image className="w-5 h-5" />
+              </button>
+              <button className="hover:bg-primary/10 p-2 rounded-full transition-colors">
+                <Smile className="w-5 h-5" />
+              </button>
+              <button className="hover:bg-primary/10 p-2 rounded-full transition-colors">
+                <Calendar className="w-5 h-5" />
+              </button>
+              <button className="hover:bg-primary/10 p-2 rounded-full transition-colors">
+                <MapPin className="w-5 h-5" />
+              </button>
             </div>
-
-            <div className="flex justify-between items-center">
-              <div className={`text-sm ${remainingChars < 0 ? 'text-destructive' : remainingChars < 20 ? 'text-primary' : 'text-muted-foreground'}`}>
-                {confession.length}/280
-              </div>
-
+            
+            <div className="flex items-center space-x-3">
+              {confession.length > 0 && (
+                <span className={`text-base font-medium ${
+                  confession.length > 252 
+                    ? 'text-destructive' 
+                    : confession.length > 224 
+                    ? 'text-yellow-500' 
+                    : 'text-muted-foreground'
+                }`}>
+                  {280 - confession.length}
+                </span>
+              )}
               <Button
-                type="submit"
-                disabled={!confession.trim() || remainingChars < 0 || isSubmitting}
-                variant="gradient"
+                onClick={handleSubmit}
+                disabled={!confession.trim() || confession.length > 280 || isSubmitting}
                 size="lg"
-                className="rounded-xl backdrop-blur-sm"
+                className="rounded-full"
               >
-                {isSubmitting ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
-                    <span>Posting...</span>
-                  </div>
-                ) : (
-                  "Post Anonymously"
-                )}
+                {isSubmitting ? 'Posting...' : 'Post'}
               </Button>
             </div>
-          </form>
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

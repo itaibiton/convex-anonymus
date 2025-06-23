@@ -1,0 +1,8 @@
+{
+  "registries": {
+    "reactbits": {
+      "url": "https://reactbits.dev",
+      "path": "./components/reactbits"
+    }
+  }
+}

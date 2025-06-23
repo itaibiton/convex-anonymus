@@ -1,9 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useConvexAuth, useMutation } from "convex/react";
-import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Repeat2 } from "lucide-react";
+import { Heart, MessageCircle, Repeat2, Share } from "lucide-react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 
@@ -47,94 +45,108 @@ export default function ConfessionCard({ _id, content, createdAt, likesCount, co
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     if (diffInSeconds < 60) {
-      return "just now";
+      return "now";
     } else if (diffInSeconds < 3600) {
       const minutes = Math.floor(diffInSeconds / 60);
-      return `${minutes}m ago`;
+      return `${minutes}m`;
     } else if (diffInSeconds < 86400) {
       const hours = Math.floor(diffInSeconds / 3600);
-      return `${hours}h ago`;
+      return `${hours}h`;
     } else if (diffInSeconds < 604800) {
       const days = Math.floor(diffInSeconds / 86400);
-      return `${days}d ago`;
+      return `${days}d`;
     } else {
       return date.toLocaleDateString();
     }
   };
 
+  const formatCount = (count: number) => {
+    if (count >= 1000000) {
+      return (count / 1000000).toFixed(1) + 'M';
+    }
+    if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'K';
+    }
+    return count.toString();
+  };
+
   return (
-    <motion.div
-      className="w-full border-b border-border hover:bg-accent/5 transition-colors duration-200"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="p-6 min-h-[200px] flex flex-col justify-between">
-        <p className="text-foreground leading-relaxed text-sm sm:text-base mb-4">
-          {content}
-        </p>
-
-        <div className="flex items-center justify-between w-full pt-2">
-          <div className="flex items-center text-xs text-muted-foreground">
-            <div className="w-2 h-2 bg-muted-foreground rounded-full mr-2" />
-            <span>Anonymous</span>
-          </div>
-
-          <time className="text-xs text-muted-foreground">
-            {formatDate(createdAt)}
-          </time>
+    <div className="p-6 twitter-border border-b twitter-hover cursor-pointer">
+      <div className="flex space-x-4">
+        {/* Anonymous Avatar */}
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center flex-shrink-0">
+          <span className="text-primary-foreground font-semibold text-base">A</span>
         </div>
+        
+        <div className="flex-1 min-w-0">
+          {/* User Info */}
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="font-bold text-foreground text-base">Anonymous</span>
+            <span className="twitter-muted text-base">@anonymous</span>
+            <span className="twitter-muted">·</span>
+            <span className="twitter-muted text-base">{formatDate(createdAt)}</span>
+          </div>
+          
+          {/* Confession Content */}
+          <div className="card-content text-foreground text-lg leading-7 mb-4">
+            {content}
+          </div>
+          
+          {/* Actions */}
+          <div className="flex justify-between max-w-md mt-4 twitter-muted">
+            {/* Reply */}
+            <button className="flex items-center space-x-2 hover:text-primary transition-colors group">
+              <div className="group-hover:bg-primary/10 p-1 rounded-full transition-colors">
+                <MessageCircle className="w-5 h-5" />
+              </div>
+              <span className="text-base">{formatCount(commentsCount)}</span>
+            </button>
 
-        <div className="flex items-center justify-between w-full pt-4 border-t border-border/50">
-          <div className="flex items-center space-x-1">
-            {isAuthenticated ? (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className={`h-8 px-2 transition-colors ${isLiked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'}`}
-                onClick={handleLike}
-              >
-                <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
-                <span className="text-xs">{likesCount}</span>
-              </Button>
-            ) : (
-              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                <Heart className="w-4 h-4 mr-1" />
-                <span className="text-xs">{likesCount}</span>
-              </Button>
-            )}
+            {/* Repost */}
+            <button 
+              onClick={handleRepost}
+              disabled={!isAuthenticated}
+              className={`flex items-center space-x-2 transition-colors group ${
+                isReposted ? 'text-emerald-500' : 'hover:text-emerald-500'
+              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <div className={`p-1 rounded-full transition-colors ${
+                isReposted 
+                  ? 'bg-emerald-500/10' 
+                  : 'group-hover:bg-emerald-500/10'
+              }`}>
+                <Repeat2 className="w-5 h-5" />
+              </div>
+              <span className="text-base">{formatCount(repostsCount)}</span>
+            </button>
 
-            {isAuthenticated ? (
-              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground hover:text-primary">
-                <MessageCircle className="w-4 h-4 mr-1" />
-                <span className="text-xs">{commentsCount}</span>
-              </Button>
-            ) : (
-              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                <MessageCircle className="w-4 h-4 mr-1" />
-                <span className="text-xs">{commentsCount}</span>
-              </Button>
-            )}
+            {/* Like */}
+            <button 
+              onClick={handleLike}
+              disabled={!isAuthenticated}
+              className={`flex items-center space-x-2 transition-colors group ${
+                isLiked ? 'text-rose-500' : 'hover:text-rose-500'
+              } ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <div className={`p-1 rounded-full transition-colors ${
+                isLiked 
+                  ? 'bg-rose-500/10' 
+                  : 'group-hover:bg-rose-500/10'
+              }`}>
+                <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+              </div>
+              <span className="text-base">{formatCount(likesCount)}</span>
+            </button>
 
-            {isAuthenticated ? (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className={`h-8 px-2 transition-colors ${isReposted ? 'text-green-500 hover:text-green-600' : 'text-muted-foreground hover:text-green-500'}`}
-                onClick={handleRepost}
-              >
-                <Repeat2 className="w-4 h-4 mr-1" />
-                <span className="text-xs">{repostsCount}</span>
-              </Button>
-            ) : (
-              <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground/50 cursor-not-allowed" disabled>
-                <Repeat2 className="w-4 h-4 mr-1" />
-                <span className="text-xs">{repostsCount}</span>
-              </Button>
-            )}
+            {/* Share */}
+            <button className="flex items-center space-x-2 hover:text-primary transition-colors group">
+              <div className="group-hover:bg-primary/10 p-1 rounded-full transition-colors">
+                <Share className="w-5 h-5" />
+              </div>
+            </button>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
